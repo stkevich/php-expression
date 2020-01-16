@@ -1,13 +1,5 @@
-Hello!
+What is it? And what can this do?
 ==================
-This is a base ddd model for simple cqrs blog project. 
+This is a simple realisation of binary expression tree. You can parse a tree and build fully query. For example, you can make sql conditions block from a tree.
 
-Attention!
------
-* This project is for educational purposes only.
-* If you think this is a bad example, welcome to Issues.
-
-Plans
------
-1) Added repository implementations
-2) Added base CQRS realisation
+More description coming soon.
