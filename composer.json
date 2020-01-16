@@ -1,0 +1,22 @@
+{
+    "name": "stkevich/php-expression",
+    "description": "Php expression tree",
+    "authors": [
+        {
+            "name": "Stas Kevich",
+            "email": "st.kevich@gmail.com"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "StKevich\\ExpressionTree\\": "src/ExpressionTree",
+        "StKevich\\ExpressionHandler\\": "src/ExpressionHandler"
+      }
+    },
+    "require": {
+        "php": ">=7.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.3"
+    }
+}
