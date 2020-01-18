@@ -13,26 +13,23 @@ Usage example.
 -
 In this example, we will receive an sql query to select retirees and we can check other objects for compliance with the retirement conditions using the same conditions.
 ```php
-function pensionerExpression($malePensionableAge, $femalePensionableAge) {
-    return new OrExpression(
-        new AndExpression(
-            new EqualExpression(
-                new KeyNode('male'),
-                new BooleanNode(true),
-            ),
-            new GreaterExpression(
-                new KeyNode('age'),
-                new IntegerNode($malePensionableAge),
-            ),
+$pensionerExpression = new OrExpression(
+    new AndExpression(
+        new EqualExpression(
+            new KeyNode('male'),
+            new BooleanNode(true),
         ),
         new GreaterExpression(
             new KeyNode('age'),
-            new FloatNode($femalePensionableAge),
+            new IntegerNode(60),
         ),
-    );
-}
+    ),
+    new GreaterExpression(
+        new KeyNode('age'),
+        new FloatNode(55),
+    ),
+);
 ...
-$pensionerExpression = pensionerExpression(60, 55);
 $sqlHandler = new SQLExpressionHandler();
 $sqlConditions = $sqlHandler->handle($pensionerExpression); //(male = true AND age > 60) OR age > 55
 $fullSql = sprintf("SELECT name, address, age, male FROM %s WHERE %s", $tableName, $sqlConditions);

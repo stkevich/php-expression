@@ -1,6 +1,9 @@
 {
     "name": "stkevich/php-expression",
-    "description": "Php expression tree",
+    "type": "library",
+    "license": "MIT",
+    "description": "Php expression tree library and simple handlers",
+    "keywords": ["expression tree", "expression", "expression handler"],
     "authors": [
         {
             "name": "Stas Kevich",
