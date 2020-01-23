@@ -1,23 +1,22 @@
-##What is it?
-
+What is it?
+-
 This is a simple implementation of an expression tree and several handlers for it. 
 
-##What is this for?
-
+What is this for?
+-
 The expression tree was designed specifically for use in conjunction with the repository and specification patterns. In order for the developer to maximally divide the logic into the corresponding layers. So, using the expression tree, you can separate the persistence layer and the business logic layer.
 
 Using the expression tree, your code is one step closer to following the principles of SRP and OCP.
 
-##What can it do?
-
+What can it do?
+-
 - You can build query conditions on a relational database (for example, SQL).
 - You can check the object for compliance with any expression.
 - You can combine both of the above features in the specification and replacing the handler in the repository to get the opportunity for a less painful transition to another database.
 - You can expand the existing functionality of the tree and implement special programmatic, logical or other expressions for your own needs. For example, add the ability to conduct mathematical operations or full-fledged object programming.
 
-##Usage example
-
-
+Usage example
+-
 As an example, we implement a simple scheme for obtaining data from a database.
 
 ```php
@@ -89,8 +88,8 @@ In this example, we created a specification that we can transfer to the previous
 
 Thus, we successfully separated the data access logic, leaving it in the `PostRepository`, and the application logic, placing it in the` AuthurPostRepositorySpec`. Now we can safely say that our repository does not know anything about what data we need, and business logic is free from the details of access to data.
 
-#Expansion options
-
+Expansion options
+-
 The presented package can be easily extended by writing third-party expressions. To do this, there are several mechanisms that should be considered when creating your own parameters, expressions or handlers.
 
 1) **Types of returned/accepted results.**
