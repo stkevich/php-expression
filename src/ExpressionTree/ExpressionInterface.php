@@ -8,5 +8,5 @@ namespace StKevich\ExpressionTree;
  */
 interface ExpressionInterface
 {
-
+    public function exec();
 }

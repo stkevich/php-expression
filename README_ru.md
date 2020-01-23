@@ -2,6 +2,12 @@
 -
 Это простая реализация дерева выражения и нескольких обработчиков для нее. 
 
+Для чего это?
+-
+Дерево выражений разрабатывалось специально для использования совместно с паттернами репозиторий и спецификация. Дабы разработчик мог максимально разделить логику по соответствующим слоям. Так, используя дерево выражений, можно разделить слой доступа к данным и слой бизнес логики. 
+
+Используя дерево выражений ваш код становится еще на один шаг ближе к следованию принципам SRP и OCP.
+
 Что это может?
 -
 - Можно построить условия запроса к реляционной базе данных (например SQL).
@@ -9,37 +15,91 @@
 - Можно объединить обе выше описанные возможности в спецификации и подменяя в репозитории обработчик получить возможность менее болезненного перехода на другую бд.
 - Можно расширить существующий функционал дерева и реализовать особые программные, логические или иные выражения для собственных нужд. Например, добавить возможность проводить математические операции или полноценное объектное программирование.
 
-Пример использования.
+Пример использования
 -
-В этом примере мы получим sql запрос для выборки пенсионеров и сможем проверить другие объекты на соответствие условиям выхода на пенсию используя те же самые условия.
+
+В качестве примера реализуем простую схему для получения данных из бд.
 
 ```php
-$pensionerExpression = new OrExpression(
-    new AndExpression(
-        new EqualExpression(
-            new KeyNode('male'),
-            new BooleanNode(true),
-        ),
-        new GreaterExpression(
-            new KeyNode('age'),
-            new IntegerNode(60),
-        ),
-    ),
-    new GreaterExpression(
-        new KeyNode('age'),
-        new FloatNode(55),
-    ),
-);
-...
-$sqlHandler = new SQLExpressionHandler();
-$sqlConditions = $sqlHandler->handle($pensionerExpression); //(male = true AND age > 60) OR age > 55
-$fullSql = sprintf("SELECT name, address, age, male FROM %s WHERE %s", $tableName, $sqlConditions);
-...
-$isPensionerHandler = new ObjectSatisfyHandler($pensionerExpression);
-if ($isPensionerHandler->handle($object)) { 
-    print 'Congratulations, you are now a pensioner!';
+class PostRepository implements PostRepositoryInterface
+{
+    ...
+    public function find(PostRepositorySpecificationInterface $spec)
+    {
+        $expressionHandler = new SQLExpressionHandler();
+        $sqlConditions = $expressionHandler->handle($spec->getExpression());
+        $response = $this->db->findOne(
+            sprintf("
+                    SELECT
+                        p.id id,
+                        p.title title,
+                        (select uid from comment c where c.postid = p.id) commentcount,
+                        ...
+                    FROM posts p
+                    ...
+                    WHERE %s
+                ",
+                $sqlConditions
+            )
+        );
+        ...
+        $posts = new PostCollection();
+        foreach ($response as $item) {
+            $posts->add(
+                new Post(
+                    $item['id'],
+                    $item['title'],
+                    $item['commentcount'],
+                    ...
+                )
+            );
+        }
+    }
+    ...
 }
 ```
-Таким образом мы объединили проверку по условию и построение условия для бд, сократив тем самым потенциальные риски при сопровождении.
+Репозиторий для получения постов в блоге, реализует метод `find` который возвращает, в нашем случае, один пост в зависимости от переданный в спецификации условий.
+
+```php
+class AuthurPostRepositorySpec implement PostRepositorySpecificationInterface
+{
+    protected int $authorId;
+
+    public function __construct(int $authorId)
+    {
+        $this->authorId = $authorId;
+    }
+
+    public function getExpression(): ExpressionInterface
+    {
+        return new EqualExpression(
+            new KeyNode('author'),
+            new IntegerNode($this->authorId),
+        );
+    }
+
+    public function isSatisfiedBy(Post $post): bool
+    {
+        $satisfyHandler = new ObjectSatisfyHandler($this->getExpression());
+        return $satisfyHandler->handle($post);
+    }
+}
+```
+В этом примере мы создали спецификацию которую можем передать в созданный ранее репозиторий и получить все посты нужного пользователя. Так же мы можем, используя метод `isSatisfiedBy` проверить подходят ли под это условие другие посты.
+
+Таким образом мы успешно разделели логику доступа к данным, оставив ее в `PostRepository`, и логику приложения, разместив ее в `AuthurPostRepositorySpec`. Теперь мы смело можем утверждать что наш репозиторий ничего не знает о том какие данные нам нужны, а бизнес логика свободна от деталей доступа к данным.
+
+Возможности расширения
+-
+Представленный пакет может быть легко расширен при помощи написания сторонних выражений. Для этого существует несколько механизмов которые стоит уччитывать при создании собственных параметров, выражений или обработчиков.
+
+1) **Типы возвращаемых/принимаемых результатов.**
+`StKevich\ExpressionTree\ExpressionResult\Types`
+Это перечень базовых типов которые могут возвращать/принимать выражения/параметры, комбинируя их вы можете сужать или расширять границы ваших выражений.
+2) **Число входных параметров.**
+`namespace StKevich\ExpressionTree\ExpressionResult\Numbers`
+Это базовый интерфейс взаимодействия с вашим выражением для других выражений и обработчиков. Параметры, как конечные листья дерева, стоят особняком и всегда должны наследоваться от `AbstractParameterNode`.
+3) **Метод `exec`.** Должен возвращать значения выполнения вашего выражения, принимает непосредственное участие в рекурсивном вычислении всего дерева. Так же метод вполне может возвращать ошибку, если ваше выражение не предполагает участие в рекурсивном обходе, как это происходит, например с `KeyNode`.
+4) **Методы уникальные для вложенных структур.** Например, методы `get` и `is` для параметров. Вы так же можете создать собственные базовые структуры, однако помните что с их методами не смогут корректно работать стандартные обработчики.
 
 More description coming soon.
