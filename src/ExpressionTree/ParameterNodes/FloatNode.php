@@ -6,7 +6,7 @@ namespace StKevich\ExpressionTree\ParameterNodes;
 
 use StKevich\ExpressionTree\ExpressionResult\Types\FloatExpressionResultInterface;
 
-class FloatNode extends AbstractParameterResultNode implements FloatExpressionResultInterface
+class FloatNode extends AbstractParameterNode implements FloatExpressionResultInterface
 {
     /** @var float */
     protected float $value;
@@ -29,10 +29,18 @@ class FloatNode extends AbstractParameterResultNode implements FloatExpressionRe
     }
 
     /**
-     * @param AbstractParameterResultNode $parameter
+     * @return float
+     */
+    public function exec(): float
+    {
+        return $this->get();
+    }
+
+    /**
+     * @param AbstractParameterNode $parameter
      * @return bool
      */
-    public function is(AbstractParameterResultNode $parameter): bool
+    public function is(AbstractParameterNode $parameter): bool
     {
         return $parameter->get() == $this->get();
     }

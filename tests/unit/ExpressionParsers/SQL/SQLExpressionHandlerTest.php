@@ -7,7 +7,7 @@ namespace StKevich\Tests;
 use PHPUnit\Framework\TestCase;
 use StKevich\ExpressionHandler\SQL\SQLExpressionHandler;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\NotExpression;
-use StKevich\ExpressionTree\ExpressionNodes\ExpressionException;
+use StKevich\ExpressionTree\Exceptions\ExpressionException;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\AndExpression;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\OrExpression;
 use StKevich\ExpressionTree\ExpressionNodes\ParameterExpressions\EqualExpression;

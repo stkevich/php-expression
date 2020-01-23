@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace StKevich\ExpressionHandler;
 
 use StKevich\ExpressionTree\ExpressionInterface;
-use StKevich\ExpressionTree\ExpressionNodes\ExpressionException;
+use StKevich\ExpressionTree\Exceptions\ExpressionException;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\DoubleExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\MultiplyExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\SingleExpressionResultInterface;
-use StKevich\ExpressionTree\ParameterNodes\AbstractParameterResultNode;
+use StKevich\ExpressionTree\ParameterNodes\AbstractParameterNode;
 use StKevich\ExpressionTree\ParameterNodes\KeyNode;
 use StKevich\ExpressionTree\ParameterNodes\StringNode;
 
@@ -33,7 +33,7 @@ abstract class AbstractExpressionHandler
             case $expression instanceof SingleExpressionResultInterface:
                 return $this->processingExpressionSingleResult($expression);
                 break;
-            case $expression instanceof AbstractParameterResultNode:
+            case $expression instanceof AbstractParameterNode:
                 return $this->processingParameter($expression);
                 break;
         }
@@ -61,9 +61,9 @@ abstract class AbstractExpressionHandler
     abstract protected function processingExpressionSingleResult(SingleExpressionResultInterface $expression);
 
     /**
-     * @param AbstractParameterResultNode $expression
+     * @param AbstractParameterNode $expression
      * @return mixed
      */
-    abstract protected function processingParameter(AbstractParameterResultNode $expression);
+    abstract protected function processingParameter(AbstractParameterNode $expression);
 
 }

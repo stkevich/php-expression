@@ -7,11 +7,11 @@ namespace StKevich\ExpressionHandler\SQL;
 use StKevich\ExpressionHandler\AbstractExpressionHandler;
 use StKevich\ExpressionTree\ExpressionInterface;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\AbstractLogicExpression;
-use StKevich\ExpressionTree\ExpressionNodes\ExpressionException;
+use StKevich\ExpressionTree\Exceptions\ExpressionException;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\DoubleExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\MultiplyExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\SingleExpressionResultInterface;
-use StKevich\ExpressionTree\ParameterNodes\AbstractParameterResultNode;
+use StKevich\ExpressionTree\ParameterNodes\AbstractParameterNode;
 use StKevich\ExpressionTree\ParameterNodes\StringNode;
 
 class SQLExpressionHandler extends AbstractExpressionHandler
@@ -83,10 +83,10 @@ class SQLExpressionHandler extends AbstractExpressionHandler
     }
 
     /**
-     * @param AbstractParameterResultNode $expression
+     * @param AbstractParameterNode $expression
      * @return mixed|string
      */
-    protected function processingParameter(AbstractParameterResultNode $expression): string
+    protected function processingParameter(AbstractParameterNode $expression): string
     {
         switch (true) {
             case $expression instanceof StringNode:

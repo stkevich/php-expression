@@ -10,15 +10,15 @@ use StKevich\ExpressionTree\ExpressionResult\Types\BooleanExpressionResultInterf
 class NotExpression extends AbstractLogicExpression implements BooleanExpressionResultInterface, SingleExpressionResultInterface
 {
     /** @var BooleanExpressionResultInterface */
-    protected BooleanExpressionResultInterface $parameter;
+    protected BooleanExpressionResultInterface $expression;
 
     /**
-     * EqualExpression constructor.
-     * @param BooleanExpressionResultInterface $parameter
+     * NotExpression constructor.
+     * @param BooleanExpressionResultInterface $expression
      */
-    public function __construct(BooleanExpressionResultInterface $parameter)
+    public function __construct(BooleanExpressionResultInterface $expression)
     {
-        $this->parameter = $parameter;
+        $this->expression = $expression;
     }
 
     /**
@@ -26,7 +26,7 @@ class NotExpression extends AbstractLogicExpression implements BooleanExpression
      */
     public function getInternalExpression(): BooleanExpressionResultInterface
     {
-        return $this->parameter;
+        return $this->expression;
     }
 
     /**
@@ -36,6 +36,14 @@ class NotExpression extends AbstractLogicExpression implements BooleanExpression
     public function implementsFunction($value): bool
     {
         return !(bool)$value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function exec()
+    {
+        return !(bool)$this->expression->exec();
     }
 
     /**

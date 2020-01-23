@@ -6,7 +6,7 @@ namespace StKevich\ExpressionTree\ParameterNodes;
 
 use StKevich\ExpressionTree\ExpressionResult\Types\BooleanExpressionResultInterface;
 
-class BooleanNode extends AbstractParameterResultNode implements BooleanExpressionResultInterface
+class BooleanNode extends AbstractParameterNode implements BooleanExpressionResultInterface
 {
     /** @var bool */
     protected bool $value;
@@ -29,10 +29,18 @@ class BooleanNode extends AbstractParameterResultNode implements BooleanExpressi
     }
 
     /**
-     * @param AbstractParameterResultNode $parameter
      * @return bool
      */
-    public function is(AbstractParameterResultNode $parameter): bool
+    public function exec()
+    {
+        return $this->get();
+    }
+
+    /**
+     * @param AbstractParameterNode $parameter
+     * @return bool
+     */
+    public function is(AbstractParameterNode $parameter): bool
     {
         return $parameter->get() == $this->get();
     }

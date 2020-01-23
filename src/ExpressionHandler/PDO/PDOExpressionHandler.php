@@ -9,8 +9,8 @@ use StKevich\ExpressionTree\ExpressionResult\Numbers\DoubleExpressionResultInter
 use StKevich\ExpressionTree\ExpressionResult\Numbers\MultiplyExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\SingleExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionInterface;
-use StKevich\ExpressionTree\ExpressionNodes\ExpressionException;
-use StKevich\ExpressionTree\ParameterNodes\AbstractParameterResultNode;
+use StKevich\ExpressionTree\Exceptions\ExpressionException;
+use StKevich\ExpressionTree\ParameterNodes\AbstractParameterNode;
 use StKevich\ExpressionTree\ParameterNodes\KeyNode;
 
 class PDOExpressionHandler extends AbstractExpressionHandler
@@ -109,10 +109,10 @@ class PDOExpressionHandler extends AbstractExpressionHandler
     }
 
     /**
-     * @param AbstractParameterResultNode $node
+     * @param AbstractParameterNode $node
      * @return PDOExpressionResult
      */
-    protected function processingParameter(AbstractParameterResultNode $node): PDOExpressionResult
+    protected function processingParameter(AbstractParameterNode $node): PDOExpressionResult
     {
         $values = [];
         if ($node instanceof KeyNode) {

@@ -54,6 +54,18 @@ class AndExpression extends AbstractLogicExpression implements BooleanExpression
     }
 
     /**
+     * @return bool
+     */
+    public function exec()
+    {
+        $result = true;
+        foreach ($this->expressions as $expression) {
+            $result = $result && (bool)$expression->exec();
+        }
+        return $result;
+    }
+
+    /**
      * @param string|null $viewType
      * @return string
      */

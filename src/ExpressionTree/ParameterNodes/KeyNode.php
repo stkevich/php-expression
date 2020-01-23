@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace StKevich\ExpressionTree\ParameterNodes;
 
+use StKevich\ExpressionTree\Exceptions\ExpressionException;
 use StKevich\ExpressionTree\ExpressionResult\Types\BooleanExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Types\NumericalExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Types\StringExpressionResultInterface;
 
-class KeyNode extends AbstractParameterResultNode implements
+class KeyNode extends AbstractParameterNode implements
     BooleanExpressionResultInterface,
     StringExpressionResultInterface,
     NumericalExpressionResultInterface
@@ -34,10 +35,18 @@ class KeyNode extends AbstractParameterResultNode implements
     }
 
     /**
-     * @param AbstractParameterResultNode $parameter
+     * @throws ExpressionException
+     */
+    public function exec()
+    {
+        throw new ExpressionException(sprintf('Node %s is not define', $this->get()));
+    }
+
+    /**
+     * @param AbstractParameterNode $parameter
      * @return bool
      */
-    public function is(AbstractParameterResultNode $parameter): bool
+    public function is(AbstractParameterNode $parameter): bool
     {
         return $parameter->get() === $this->get();
     }

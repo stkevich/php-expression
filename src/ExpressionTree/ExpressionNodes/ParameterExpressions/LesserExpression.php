@@ -6,7 +6,7 @@ namespace StKevich\ExpressionTree\ExpressionNodes\ParameterExpressions;
 
 use StKevich\ExpressionTree\ExpressionResult\Types\BooleanExpressionResultInterface;
 
-class LesserExpression extends AbstractParameterExpressionResult implements BooleanExpressionResultInterface
+class LesserExpression extends AbstractParameterExpression implements BooleanExpressionResultInterface
 {
     /**
      * @param mixed $valueLeft
@@ -16,6 +16,14 @@ class LesserExpression extends AbstractParameterExpressionResult implements Bool
     public function implementsFunction($valueLeft, $valueRight): bool
     {
         return $valueLeft < $valueRight;
+    }
+
+    /**
+     * @return bool
+     */
+    public function exec()
+    {
+        return $this->getLeftExpression()->exec() < $this->getRightExpression()->exec();
     }
 
     /**

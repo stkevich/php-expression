@@ -6,7 +6,7 @@ namespace StKevich\ExpressionTree\ParameterNodes;
 
 use StKevich\ExpressionTree\ExpressionResult\Types\StringExpressionResultInterface;
 
-class StringNode extends AbstractParameterResultNode implements StringExpressionResultInterface
+class StringNode extends AbstractParameterNode implements StringExpressionResultInterface
 {
     /** @var string */
     protected string $value;
@@ -29,10 +29,18 @@ class StringNode extends AbstractParameterResultNode implements StringExpression
     }
 
     /**
-     * @param AbstractParameterResultNode $parameter
+     * @return string
+     */
+    public function exec(): string
+    {
+        return $this->get();
+    }
+
+    /**
+     * @param AbstractParameterNode $parameter
      * @return bool
      */
-    public function is(AbstractParameterResultNode $parameter): bool
+    public function is(AbstractParameterNode $parameter): bool
     {
         return $parameter->get() == $this->get();
     }

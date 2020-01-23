@@ -6,12 +6,16 @@ namespace StKevich\ExpressionHandler\ObjectSatisfaction;
 
 use StKevich\ExpressionHandler\AbstractExpressionHandler;
 use StKevich\ExpressionTree\ExpressionInterface;
-use StKevich\ExpressionTree\ExpressionNodes\ExpressionException;
+use StKevich\ExpressionTree\Exceptions\ExpressionException;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\DoubleExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\MultiplyExpressionResultInterface;
 use StKevich\ExpressionTree\ExpressionResult\Numbers\SingleExpressionResultInterface;
-use StKevich\ExpressionTree\ParameterNodes\AbstractParameterResultNode;
+use StKevich\ExpressionTree\ParameterNodes\AbstractParameterNode;
+use StKevich\ExpressionTree\ParameterNodes\BooleanNode;
+use StKevich\ExpressionTree\ParameterNodes\FloatNode;
+use StKevich\ExpressionTree\ParameterNodes\IntegerNode;
 use StKevich\ExpressionTree\ParameterNodes\KeyNode;
+use StKevich\ExpressionTree\ParameterNodes\StringNode;
 
 class ObjectSatisfyHandler extends AbstractExpressionHandler
 {
@@ -39,7 +43,8 @@ class ObjectSatisfyHandler extends AbstractExpressionHandler
     {
         $this->object = $object;
 
-        return (bool)$this->recursiveHandling($this->expression);
+        $expression = $this->recursiveHandling($this->expression);
+        return (bool)$expression->exec();
     }
 
     /**
@@ -52,58 +57,76 @@ class ObjectSatisfyHandler extends AbstractExpressionHandler
         return parent::recursiveHandling($expression);
     }
 
-
     /**
      * @param MultiplyExpressionResultInterface $expression
      * @return bool
      * @throws ExpressionException
      */
-    protected function processingExpressionMultiplyResult(MultiplyExpressionResultInterface $expression): bool
+    protected function processingExpressionMultiplyResult(MultiplyExpressionResultInterface $expression)
     {
-        $exprResult = [];
+        $class = get_class($expression);
+        $nodes = [];
         foreach ($expression->getExpressionIterator() as $internalExpression) {
-            $exprResult[] = $this->recursiveHandling($internalExpression);
+            $nodes[] = $this->recursiveHandling($internalExpression);
         }
-        return (bool) $expression->implementsFunction(...$exprResult);
+        $expression = new $class(...$nodes);
+        return $expression;
     }
 
     /**
      * @param DoubleExpressionResultInterface $expression
-     * @return bool
+     * @return mixed
      * @throws ExpressionException
      */
-    protected function processingExpressionDoubleResult(DoubleExpressionResultInterface $expression): bool
+    protected function processingExpressionDoubleResult(DoubleExpressionResultInterface $expression)
     {
-        $leftParameter = $this->recursiveHandling($expression->getLeftExpression());
-        $rightParameter = $this->recursiveHandling($expression->getRightExpression());
-        return (bool) $expression->implementsFunction($leftParameter, $rightParameter);
+        $class = get_class($expression);
+        $left = $this->recursiveHandling($expression->getLeftExpression());
+        $right = $this->recursiveHandling($expression->getRightExpression());
+        $expression = new $class($left, $right);
+        return $expression;
     }
 
     /**
      * @param SingleExpressionResultInterface $expression
-     * @return bool
+     * @return mixed|SingleExpressionResultInterface|BooleanNode|FloatNode|IntegerNode|StringNode
      * @throws ExpressionException
      */
-    protected function processingExpressionSingleResult(SingleExpressionResultInterface $expression): bool
+    protected function processingExpressionSingleResult(SingleExpressionResultInterface $expression)
     {
-        return (bool)$expression->implementsFunction($this->recursiveHandling($expression->getInternalExpression()));
+        $class = get_class($expression);
+        $node = $this->recursiveHandling($expression->getInternalExpression());
+        $expression = new $class($node);
+        return $expression;
     }
 
     /**
-     * @param AbstractParameterResultNode $expression
-     * @return mixed|string
+     * @param AbstractParameterNode $expression
+     * @return mixed|AbstractParameterNode|BooleanNode|FloatNode|IntegerNode|StringNode
+     * @throws ExpressionException
      */
-    protected function processingParameter(AbstractParameterResultNode $expression)
+    protected function processingParameter(AbstractParameterNode $expression)
     {
-        switch (true) {
-            case $expression instanceof KeyNode:
-                $name = $expression->get();
-                return (string) $this->object->$name;
-                break;
-            default:
-                return $expression->get();
-                break;
+        if ($expression instanceof KeyNode) {
+            $name = $expression->get();
+            $value = $this->object->$name;
+            if (!isset($value)) {
+                throw new ExpressionException(sprintf('Value %s is not define', $name));
+            }
+            if (is_string($value)) {
+                $expression = new StringNode($value);
+            }
+            else if (is_int($value)) {
+                $expression = new IntegerNode($value);
+            }
+            else if (is_float($value)) {
+                $expression = new FloatNode($value);
+            }
+            else if (is_bool($value)) {
+                $expression = new BooleanNode($value);
+            }
         }
+        return $expression;
     }
 
 }
