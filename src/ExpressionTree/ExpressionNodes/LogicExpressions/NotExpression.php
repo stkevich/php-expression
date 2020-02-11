@@ -30,15 +30,6 @@ class NotExpression extends AbstractLogicExpression implements BooleanExpression
     }
 
     /**
-     * @param $value
-     * @return bool
-     */
-    public function implementsFunction($value): bool
-    {
-        return !(bool)$value;
-    }
-
-    /**
      * @return bool
      */
     public function exec()

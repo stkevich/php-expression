@@ -6,6 +6,7 @@ namespace StKevich\Tests;
 
 use PHPUnit\Framework\TestCase;
 use StKevich\ExpressionHandler\SQL\SQLExpressionHandler;
+use StKevich\ExpressionTree\ExpressionNodes\ExpressionNodesInterface;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\NotExpression;
 use StKevich\ExpressionTree\Exceptions\ExpressionException;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\AndExpression;
@@ -38,6 +39,19 @@ class SQLExpressionHandlerTest extends TestCase
         $sql = $parser->handle($expression);
 
         $this->assertEquals($expectedSql, $sql);
+    }
+
+    /**
+     * @throws ExpressionException
+     */
+    public function testUnexpectedExpression()
+    {
+        $this->expectException(ExpressionException::class);
+
+        $unexpectedExpressionType = $this->createMock(ExpressionNodesInterface::class);
+
+        $handler = new SQLExpressionHandler();
+        $handler->handle($unexpectedExpressionType);
     }
 
     public function equalExpressionProvider()

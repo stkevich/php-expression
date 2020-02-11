@@ -39,15 +39,16 @@ class KeyNode extends AbstractParameterNode implements
      */
     public function exec()
     {
-        throw new ExpressionException(sprintf('Node %s is not define', $this->get()));
+        throw new ExpressionException(sprintf('Key node %s is not define', $this->get()));
     }
 
     /**
      * @param AbstractParameterNode $parameter
      * @return bool
+     * @throws ExpressionException
      */
     public function is(AbstractParameterNode $parameter): bool
     {
-        return $parameter->get() === $this->get();
+        throw new ExpressionException(sprintf('Key node %s can\'t be compare', $this->get()));
     }
 }

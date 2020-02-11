@@ -16,10 +16,4 @@ interface SingleExpressionResultInterface extends ExpressionNodesInterface
      */
     public function getInternalExpression(): ExpressionInterface;
 
-    /**
-     * @param $value
-     * @return mixed
-     */
-    public function implementsFunction($value);
-
 }

@@ -41,19 +41,6 @@ class OrExpression extends AbstractLogicExpression implements BooleanExpressionR
     }
 
     /**
-     * @param mixed ...$values
-     * @return bool|mixed
-     */
-    public function implementsFunction(...$values)
-    {
-        $result = false;
-        foreach ($values as $value) {
-            $result = $result || (bool)$value;
-        }
-        return $result;
-    }
-
-    /**
      * @return bool
      */
     public function exec()

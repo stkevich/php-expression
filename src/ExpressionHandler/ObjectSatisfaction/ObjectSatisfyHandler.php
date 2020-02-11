@@ -49,7 +49,7 @@ class ObjectSatisfyHandler extends AbstractExpressionHandler
 
     /**
      * @param ExpressionInterface $expression
-     * @return bool|mixed|string
+     * @return ExpressionInterface
      * @throws ExpressionException
      */
     protected function recursiveHandling(ExpressionInterface $expression)
@@ -59,7 +59,7 @@ class ObjectSatisfyHandler extends AbstractExpressionHandler
 
     /**
      * @param MultiplyExpressionResultInterface $expression
-     * @return bool
+     * @return MultiplyExpressionResultInterface
      * @throws ExpressionException
      */
     protected function processingExpressionMultiplyResult(MultiplyExpressionResultInterface $expression)
@@ -75,7 +75,7 @@ class ObjectSatisfyHandler extends AbstractExpressionHandler
 
     /**
      * @param DoubleExpressionResultInterface $expression
-     * @return mixed
+     * @return DoubleExpressionResultInterface
      * @throws ExpressionException
      */
     protected function processingExpressionDoubleResult(DoubleExpressionResultInterface $expression)
@@ -89,7 +89,7 @@ class ObjectSatisfyHandler extends AbstractExpressionHandler
 
     /**
      * @param SingleExpressionResultInterface $expression
-     * @return mixed|SingleExpressionResultInterface|BooleanNode|FloatNode|IntegerNode|StringNode
+     * @return SingleExpressionResultInterface
      * @throws ExpressionException
      */
     protected function processingExpressionSingleResult(SingleExpressionResultInterface $expression)
@@ -102,7 +102,7 @@ class ObjectSatisfyHandler extends AbstractExpressionHandler
 
     /**
      * @param AbstractParameterNode $expression
-     * @return mixed|AbstractParameterNode|BooleanNode|FloatNode|IntegerNode|StringNode
+     * @return AbstractParameterNode
      * @throws ExpressionException
      */
     protected function processingParameter(AbstractParameterNode $expression)

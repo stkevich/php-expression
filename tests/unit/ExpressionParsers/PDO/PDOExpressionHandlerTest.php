@@ -7,6 +7,7 @@ namespace StKevich\Tests;
 use PHPUnit\Framework\TestCase;
 use StKevich\ExpressionHandler\PDO\PDOExpressionHandler;
 use StKevich\ExpressionHandler\PDO\PDOExpressionResult;
+use StKevich\ExpressionTree\ExpressionNodes\ExpressionNodesInterface;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\NotExpression;
 use StKevich\ExpressionTree\Exceptions\ExpressionException;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\AndExpression;
@@ -36,9 +37,22 @@ class PDOExpressionHandlerTest extends TestCase
      */
     public function testHandleExpression($expression, $expectedResult)
     {
-        $parser = new PDOExpressionHandler();
-        $pdoExpression = $parser->handle($expression);
+        $handler = new PDOExpressionHandler();
+        $pdoExpression = $handler->handle($expression);
         $this->assertEquals($expectedResult, $pdoExpression);
+    }
+
+    /**
+     * @throws ExpressionException
+     */
+    public function testUnexpectedExpression()
+    {
+        $this->expectException(ExpressionException::class);
+
+        $unexpectedExpressionType = $this->createMock(ExpressionNodesInterface::class);
+
+        $handler = new PDOExpressionHandler();
+        $handler->handle($unexpectedExpressionType);
     }
 
     /**

@@ -41,19 +41,6 @@ class AndExpression extends AbstractLogicExpression implements BooleanExpression
     }
 
     /**
-     * @param mixed ...$values
-     * @return bool|mixed
-     */
-    public function implementsFunction(...$values)
-    {
-        $result = true;
-        foreach ($values as $value) {
-            $result = $result && (bool)$value;
-        }
-        return $result;
-    }
-
-    /**
      * @return bool
      */
     public function exec()

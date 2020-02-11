@@ -6,6 +6,8 @@ namespace StKevich\ExpressionHandler\Tests;
 
 use PHPUnit\Framework\TestCase;
 use StKevich\ExpressionHandler\ObjectSatisfaction\ObjectSatisfyHandler;
+use StKevich\ExpressionTree\Exceptions\ExpressionException;
+use StKevich\ExpressionTree\ExpressionNodes\ExpressionNodesInterface;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\AndExpression;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\NotExpression;
 use StKevich\ExpressionTree\ExpressionNodes\LogicExpressions\OrExpression;
@@ -23,6 +25,7 @@ class ObjectSatisfyHandlerTest extends TestCase
      * @param $expression
      * @param $object
      * @param $expectedResult
+     * @throws ExpressionException
      * @dataProvider equalExpressionProvider
      * @dataProvider equalExpressionSoftTypesProvider
      * @dataProvider greaterExpressionProvider
@@ -34,9 +37,41 @@ class ObjectSatisfyHandlerTest extends TestCase
      */
     public function testHandleExpression($expression, $object, $expectedResult)
     {
-        $satisfyHandler = new ObjectSatisfyHandler($expression);
-        $result = $satisfyHandler->handle($object);
+        $handler = new ObjectSatisfyHandler($expression);
+        $result = $handler->handle($object);
         $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @throws ExpressionException
+     */
+    public function testUnexpectedExpression_ThrowException()
+    {
+        $this->expectException(ExpressionException::class);
+
+        $unexpectedExpressionType = $this->createMock(ExpressionNodesInterface::class);
+        $object = $this->getTestedObject();
+
+        $handler = new ObjectSatisfyHandler($unexpectedExpressionType);
+        $handler->handle($object);
+    }
+
+    /**
+     * @throws ExpressionException
+     */
+    public function testUnexpectedObjectValue_ThrowException()
+    {
+        $this->expectException(ExpressionException::class);
+
+        $expression = new EqualExpression(
+            new KeyNode('unexpectedParam'),
+            new StringNode('stringValue'),
+        );
+
+        $object = $this->getTestedObject();
+
+        $handler = new ObjectSatisfyHandler($expression);
+        $handler->handle($object);
     }
 
     protected function getTestedObject()

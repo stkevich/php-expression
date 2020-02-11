@@ -21,11 +21,4 @@ interface DoubleExpressionResultInterface extends ExpressionNodesInterface
      */
     public function getRightExpression(): ExpressionInterface;
 
-    /**
-     * @param $valueLeft
-     * @param $valueRight
-     * @return mixed
-     */
-    public function implementsFunction($valueLeft, $valueRight);
-
 }

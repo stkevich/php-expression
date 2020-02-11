@@ -9,16 +9,6 @@ use StKevich\ExpressionTree\ExpressionResult\Types\BooleanExpressionResultInterf
 class GreaterExpression extends AbstractParameterExpression implements BooleanExpressionResultInterface
 {
     /**
-     * @param mixed $valueLeft
-     * @param mixed $valueRight
-     * @return bool
-     */
-    public function implementsFunction($valueLeft, $valueRight): bool
-    {
-        return $valueLeft > $valueRight;
-    }
-
-    /**
      * @return bool
      */
     public function exec()

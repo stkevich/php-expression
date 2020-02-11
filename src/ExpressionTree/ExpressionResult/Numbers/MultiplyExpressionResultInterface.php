@@ -17,10 +17,4 @@ interface MultiplyExpressionResultInterface extends ExpressionNodesInterface
      */
     public function getExpressionIterator(): ExpressionIterator;
 
-    /**
-     * @param mixed ...$values
-     * @return mixed
-     */
-    public function implementsFunction(...$values);
-
 }
