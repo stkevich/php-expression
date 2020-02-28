@@ -11,10 +11,9 @@
         }
     ],
     "autoload": {
-      "psr-4": {
-        "StKevich\\ExpressionTree\\": "src/ExpressionTree",
-        "StKevich\\ExpressionHandler\\": "src/ExpressionHandler"
-      }
+        "psr-4": {
+            "StKevich\\": "src"
+        }
     },
     "require": {
         "php": ">=7.4.0"

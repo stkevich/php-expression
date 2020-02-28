@@ -88,7 +88,28 @@ In this example, we created a specification that we can transfer to the previous
 
 Thus, we successfully separated the data access logic, leaving it in the `PostRepository`, and the application logic, placing it in the` AuthurPostRepositorySpec`. Now we can safely say that our repository does not know anything about what data we need, and business logic is free from the details of access to data.
 
-Expansion options
+Использование билдера выражений
+-
+
+To simplify the work with expressions, there is a builder. Thanks to it, you can significantly reduce the amount of code without losing clarity and conciseness.
+
+For example, this code:
+```php
+use StKevich\ExpressionHelper\Builder\ExpressionBuilder AS EB;
+...
+$expr = EB::eq('$author', $authorId);
+```
+creates a similar expression:
+```php
+$expr = new EqualExpression(
+    new KeyNode('author'),
+    new IntegerNode($authorId),
+);
+```
+
+**Using a builder to build expressions is preferred!**
+
+Possibility of expanding
 -
 The presented package can be easily extended by writing third-party expressions. To do this, there are several mechanisms that should be considered when creating your own parameters, expressions or handlers.
 
