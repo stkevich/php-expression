@@ -1,0 +1,11 @@
+version: "3"
+services:
+
+  backend:
+    build: ./docker/php
+    user: $UID
+    volumes:
+      - $PWD/:/code
+    environment:
+      - XDEBUG_CONFIG=remote_host=docker.for.mac.localhost remote_port=9000
+      - PHP_IDE_CONFIG=serverName=app2
